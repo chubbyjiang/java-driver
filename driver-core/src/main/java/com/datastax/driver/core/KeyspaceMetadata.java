@@ -253,13 +253,6 @@ public class KeyspaceMetadata {
         }
     };
 
-    private static final Comparator<AbstractTableMetadata> tableOrViewByName = new Comparator<AbstractTableMetadata>() {
-        @Override
-        public int compare(AbstractTableMetadata o1, AbstractTableMetadata o2) {
-            return o1.getName().compareTo(o2.getName());
-        }
-    };
-
     private static final Comparator<FunctionMetadata> functionByName = new Comparator<FunctionMetadata>() {
         @Override
         public int compare(FunctionMetadata o1, FunctionMetadata o2) {
