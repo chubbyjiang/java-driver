@@ -33,6 +33,14 @@ public abstract class AbstractTableMetadata {
         }
     };
 
+    // comparator for ordering tables and views by name.
+    static final Comparator<AbstractTableMetadata> byNameComparator = new Comparator<AbstractTableMetadata>() {
+        @Override
+        public int compare(AbstractTableMetadata o1, AbstractTableMetadata o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
+    };
+
     static final Predicate<ClusteringOrder> isAscending = new Predicate<ClusteringOrder>() {
         @Override
         public boolean apply(ClusteringOrder o) {
@@ -240,7 +248,7 @@ public abstract class AbstractTableMetadata {
         sb.append(" WITH ");
         if (options.isCompactStorage())
             and(sb.append("COMPACT STORAGE"), formatted);
-        if (!Iterables.all(clusteringOrder, isAscending))
+        if (!clusteringOrder.isEmpty())
             and(appendClusteringOrder(sb), formatted);
         sb.append("read_repair_chance = ").append(options.getReadRepairChance());
         and(sb, formatted).append("dclocal_read_repair_chance = ").append(options.getLocalReadRepairChance());
@@ -310,7 +318,7 @@ public abstract class AbstractTableMetadata {
     }
 
     private StringBuilder and(StringBuilder sb, boolean formatted) {
-        return newLine(sb, formatted).append(spaces(2, formatted)).append(" AND ");
+        return newLine(sb, formatted).append(spaces(3, formatted)).append(" AND ");
     }
 
     static String spaces(int n, boolean formatted) {
