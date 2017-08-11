@@ -318,7 +318,7 @@ public abstract class AbstractTableMetadata {
     }
 
     private StringBuilder and(StringBuilder sb, boolean formatted) {
-        return newLine(sb, formatted).append(spaces(3, formatted)).append(" AND ");
+        return spaceOrNewLine(sb, formatted).append("AND ");
     }
 
     static String spaces(int n, boolean formatted) {

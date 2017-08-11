@@ -418,12 +418,11 @@ public class TableMetadata extends AbstractTableMetadata {
     protected String asCQLQuery(boolean formatted) {
         StringBuilder sb = new StringBuilder();
         sb.append("CREATE TABLE ").append(Metadata.quoteIfNecessary(keyspace.getName())).append('.').append(Metadata.quoteIfNecessary(name)).append(" (");
-        newLine(sb, formatted);
         for (ColumnMetadata cm : columns.values())
-            newLine(sb.append(spaces(4, formatted)).append(cm).append(',').append(spaces(1, !formatted)), formatted);
+            spaceOrNewLine(sb, formatted).append(cm).append(',');
 
         // PK
-        sb.append(spaces(4, formatted)).append("PRIMARY KEY (");
+        spaceOrNewLine(sb, formatted).append("PRIMARY KEY (");
         if (partitionKey.size() == 1) {
             sb.append(Metadata.quoteIfNecessary(partitionKey.get(0).getName()));
         } else {

@@ -162,6 +162,8 @@ public class ExportAsStringTest extends CCMTestsSupport {
                 "SFUNC avgState STYPE tuple<int,bigint> FINALFUNC avgFinal INITCOND (0,0);");
 
         ks = cluster().getMetadata().getKeyspace(keyspace);
+
+        // validate that the exported schema matches what was expected exactly.
         assertThat(ks.exportAsString().trim()).isEqualTo(getExpectedCqlString(ccm().getCassandraVersion()));
     }
 

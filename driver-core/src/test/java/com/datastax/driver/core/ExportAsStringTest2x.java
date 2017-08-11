@@ -101,6 +101,8 @@ public class ExportAsStringTest2x extends CCMTestsSupport {
                 .andColumn("rank"));
 
         ks = cluster().getMetadata().getKeyspace(keyspace);
+
+        // validate that the exported schema matches what was expected exactly.
         assertThat(ks.exportAsString().trim()).isEqualTo(getExpectedCqlString(ccm().getCassandraVersion()));
     }
 }
