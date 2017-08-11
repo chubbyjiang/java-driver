@@ -293,7 +293,7 @@ public abstract class AbstractTableMetadata {
         sb.append("CLUSTERING ORDER BY (");
         for (int i = 0; i < clusteringColumns.size(); i++) {
             if (i > 0) sb.append(", ");
-            sb.append(clusteringColumns.get(i).getName()).append(' ').append(clusteringOrder.get(i));
+            sb.append(Metadata.quoteIfNecessary(clusteringColumns.get(i).getName())).append(' ').append(clusteringOrder.get(i));
         }
         return sb.append(')');
     }
