@@ -48,7 +48,7 @@ CREATE INDEX ryear ON complex_ks.rank_by_year_and_name (race_year);
 
 CREATE TABLE complex_ks.ztable (
     zkey text,
-    a int,
+    a frozen<complex_ks.atype>,
     PRIMARY KEY (zkey)
 ) WITH read_repair_chance = 0.0
     AND dclocal_read_repair_chance = 0.1
