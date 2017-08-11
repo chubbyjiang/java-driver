@@ -339,7 +339,7 @@ public abstract class AbstractTableMetadata {
     }
 
     static StringBuilder spaceOrNewLine(StringBuilder sb, boolean formatted) {
-        sb.append(formatted ? '\n' : ' ');
+        sb.append(formatted ? "\n    " : ' ');
         return sb;
     }
 
