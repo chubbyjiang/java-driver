@@ -207,8 +207,7 @@ public class MaterializedViewMetadata extends AbstractTableMetadata {
         sb.append(')');
 
         // append 3 extra spaces if formatted to align WITH.
-        newLine(sb, formatted);
-        sb.append(spaces(3, formatted));
+        spaceOrNewLine(sb, formatted);
         appendOptions(sb, formatted);
         return sb.toString();
 

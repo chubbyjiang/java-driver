@@ -245,7 +245,7 @@ public abstract class AbstractTableMetadata {
 
     protected StringBuilder appendOptions(StringBuilder sb, boolean formatted) {
         // Options
-        sb.append(" WITH ");
+        sb.append("WITH ");
         if (options.isCompactStorage())
             and(sb.append("COMPACT STORAGE"), formatted);
         if (!clusteringOrder.isEmpty())
@@ -319,17 +319,6 @@ public abstract class AbstractTableMetadata {
 
     private StringBuilder and(StringBuilder sb, boolean formatted) {
         return spaceOrNewLine(sb, formatted).append("AND ");
-    }
-
-    static String spaces(int n, boolean formatted) {
-        if (!formatted)
-            return "";
-
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < n; i++)
-            sb.append(' ');
-
-        return sb.toString();
     }
 
     static StringBuilder newLine(StringBuilder sb, boolean formatted) {

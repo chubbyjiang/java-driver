@@ -418,7 +418,9 @@ public class TableMetadata extends AbstractTableMetadata {
     protected String asCQLQuery(boolean formatted) {
         StringBuilder sb = new StringBuilder();
         sb.append("CREATE TABLE ").append(Metadata.quoteIfNecessary(keyspace.getName())).append('.').append(Metadata.quoteIfNecessary(name)).append(" (");
-        newLine(sb, formatted);
+        if (formatted) {
+            spaceOrNewLine(sb, true);
+        }
         for (ColumnMetadata cm : columns.values()) {
             sb.append(cm).append(',');
             spaceOrNewLine(sb, formatted);
@@ -446,7 +448,7 @@ public class TableMetadata extends AbstractTableMetadata {
         newLine(sb, formatted);
         // end PK
 
-        sb.append(")");
+        sb.append(") ");
         appendOptions(sb, formatted);
         return sb.toString();
     }
