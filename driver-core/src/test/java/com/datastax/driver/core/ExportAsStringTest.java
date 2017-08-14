@@ -182,6 +182,19 @@ public class ExportAsStringTest extends CCMTestsSupport {
 
         // validate that the exported schema matches what was expected exactly.
         assertThat(ks.exportAsString().trim()).isEqualTo(getExpectedCqlString());
+
+        // Also validate that when you create a Cluster with schema already created that the exported string
+        // is the same.
+        Cluster newCluster = this.createClusterBuilderNoDebouncing()
+                .addContactPointsWithPorts(this.getContactPointsWithPorts())
+                .build();
+        try {
+            newCluster.init();
+            ks = newCluster.getMetadata().getKeyspace(keyspace);
+            assertThat(ks.exportAsString().trim()).isEqualTo(getExpectedCqlString());
+        } finally {
+            newCluster.close();
+        }
     }
 
     private String getExpectedCqlString() {
