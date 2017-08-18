@@ -16,10 +16,9 @@
 package com.datastax.driver.core;
 
 import com.datastax.driver.core.exceptions.DriverInternalError;
-import org.testng.annotations.Test;
-
 import java.util.Comparator;
 import java.util.List;
+import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -69,20 +68,8 @@ public class DirectedGraphTest {
         g.addEdge("B", "A");
 
         // Topological sort order should be : GH,E,F,D,BC,A
-        // There's no guarantee on the order within the same level, so we use sublists:
         List<String> sorted = g.topologicalSort();
-        assertThat(sorted.subList(0, 2))
-                .containsExactly("G", "H");
-        assertThat(sorted.subList(2, 3))
-                .containsExactly("E");
-        assertThat(sorted.subList(3, 4))
-                .containsExactly("F");
-        assertThat(sorted.subList(4, 5))
-                .containsExactly("D");
-        assertThat(sorted.subList(5, 7))
-                .containsExactly("B", "C");
-        assertThat(sorted.subList(7, 8))
-                .containsExactly("A");
+        assertThat(sorted).containsExactly("G", "H", "E", "F", "D", "B", "C", "A");
     }
 
     @Test(groups = "unit")
@@ -118,23 +105,11 @@ public class DirectedGraphTest {
         g.addEdge(9, 1);
         g.addEdge(1, 0);
 
-        // Topological sort order should be : [7,6],[5],[10],[2,1],[0]
-        // There's no guarantee on the order within the same level, so we use sublists:
-        List<Integer> sorted = g.topologicalSort();
-        assertThat(sorted.subList(0, 2))
-                .containsExactly(7, 6);
+        // Topological sort order should be : [7,6],[5],[10],[9],[2,1],[0]
         // 5 comes before 10 even though they appear at the same depth.  This happens because 5's (7) dependency
         // is evaluated before 10's (6), so it is placed first.
-        assertThat(sorted.subList(2, 3))
-                .containsExactly(5);
-        assertThat(sorted.subList(3, 4))
-                .containsExactly(10);
-        assertThat(sorted.subList(4, 5))
-                .containsExactly(9);
-        assertThat(sorted.subList(5, 7))
-                .containsExactly(2, 1);
-        assertThat(sorted.subList(7, 8))
-                .containsExactly(0);
+        List<Integer> sorted = g.topologicalSort();
+        assertThat(sorted).containsExactly(7, 6, 5, 10, 9, 2, 1, 0);
     }
 
     @Test(groups = "unit", expectedExceptions = DriverInternalError.class)
