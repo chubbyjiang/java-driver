@@ -131,7 +131,11 @@ public class MetadataManager implements AsyncAutoCloseable {
             v ->
                 SchemaQueries.newInstance(context, logPrefix)
                     .execute(kind, keyspace, object, arguments))
-        .thenApplyAsync(singleThreaded::refreshSchema, adminExecutor);
+        .thenApplyAsync(singleThreaded::refreshSchema, adminExecutor)
+        .whenComplete(
+            (v, error) ->
+                // Remember the first attempt, whether it was successful or not
+                singleThreaded.firstSchemaRefreshFuture.complete(null));
   }
 
   // The control connection may or may not have been initialized already by TopologyMonitor.
@@ -215,7 +219,7 @@ public class MetadataManager implements AsyncAutoCloseable {
     }
 
     private Void refreshSchema(SchemaRows schemaRows) {
-      // TODO complete firstSchemaRefreshFuture at the end
+      // TODO create and run SchemaParser, apply refresh
       throw new UnsupportedOperationException("TODO");
     }
 

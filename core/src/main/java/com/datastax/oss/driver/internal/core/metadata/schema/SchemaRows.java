@@ -15,6 +15,7 @@
  */
 package com.datastax.oss.driver.internal.core.metadata.schema;
 
+import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.metadata.Node;
 import com.datastax.oss.driver.internal.core.adminrequest.AdminResult.Row;
 import com.datastax.oss.driver.internal.core.metadata.SchemaElementKind;
@@ -40,25 +41,25 @@ public class SchemaRows {
 
   public final SchemaElementKind refreshKind;
   public final List<Row> keyspaces;
-  public final Multimap<String, Row> tables;
-  public final Multimap<String, Row> views;
-  public final Multimap<String, Row> types;
-  public final Multimap<String, Row> functions;
-  public final Multimap<String, Row> aggregates;
-  public final Map<String, Multimap<String, Row>> columns;
-  public final Map<String, Multimap<String, Row>> indexes;
+  public final Multimap<CqlIdentifier, Row> tables;
+  public final Multimap<CqlIdentifier, Row> views;
+  public final Multimap<CqlIdentifier, Row> types;
+  public final Multimap<CqlIdentifier, Row> functions;
+  public final Multimap<CqlIdentifier, Row> aggregates;
+  public final Map<CqlIdentifier, Multimap<CqlIdentifier, Row>> columns;
+  public final Map<CqlIdentifier, Multimap<CqlIdentifier, Row>> indexes;
 
   private SchemaRows(
       Node node,
       SchemaElementKind refreshKind,
       List<Row> keyspaces,
-      Multimap<String, Row> tables,
-      Multimap<String, Row> views,
-      Map<String, Multimap<String, Row>> columns,
-      Map<String, Multimap<String, Row>> indexes,
-      Multimap<String, Row> types,
-      Multimap<String, Row> functions,
-      Multimap<String, Row> aggregates) {
+      Multimap<CqlIdentifier, Row> tables,
+      Multimap<CqlIdentifier, Row> views,
+      Map<CqlIdentifier, Multimap<CqlIdentifier, Row>> columns,
+      Map<CqlIdentifier, Multimap<CqlIdentifier, Row>> indexes,
+      Multimap<CqlIdentifier, Row> types,
+      Multimap<CqlIdentifier, Row> functions,
+      Multimap<CqlIdentifier, Row> aggregates) {
     this.node = node;
     this.refreshKind = refreshKind;
     this.keyspaces = keyspaces;
@@ -79,20 +80,20 @@ public class SchemaRows {
     private final String tableNameColumn;
     private final String logPrefix;
     private final ImmutableList.Builder<Row> keyspacesBuilder = ImmutableList.builder();
-    private final ImmutableMultimap.Builder<String, Row> tablesBuilder =
+    private final ImmutableMultimap.Builder<CqlIdentifier, Row> tablesBuilder =
         ImmutableListMultimap.builder();
-    private final ImmutableMultimap.Builder<String, Row> viewsBuilder =
+    private final ImmutableMultimap.Builder<CqlIdentifier, Row> viewsBuilder =
         ImmutableListMultimap.builder();
-    private final ImmutableMultimap.Builder<String, Row> typesBuilder =
+    private final ImmutableMultimap.Builder<CqlIdentifier, Row> typesBuilder =
         ImmutableListMultimap.builder();
-    private final ImmutableMultimap.Builder<String, Row> functionsBuilder =
+    private final ImmutableMultimap.Builder<CqlIdentifier, Row> functionsBuilder =
         ImmutableListMultimap.builder();
-    private final ImmutableMultimap.Builder<String, Row> aggregatesBuilder =
+    private final ImmutableMultimap.Builder<CqlIdentifier, Row> aggregatesBuilder =
         ImmutableListMultimap.builder();
-    private final Map<String, ImmutableMultimap.Builder<String, Row>> columnsBuilders =
-        new LinkedHashMap<>();
-    private final Map<String, ImmutableMultimap.Builder<String, Row>> indexesBuilders =
-        new LinkedHashMap<>();
+    private final Map<CqlIdentifier, ImmutableMultimap.Builder<CqlIdentifier, Row>>
+        columnsBuilders = new LinkedHashMap<>();
+    private final Map<CqlIdentifier, ImmutableMultimap.Builder<CqlIdentifier, Row>>
+        indexesBuilders = new LinkedHashMap<>();
 
     Builder(Node node, SchemaElementKind refreshKind, String tableNameColumn, String logPrefix) {
       this.node = node;
@@ -155,17 +156,17 @@ public class SchemaRows {
       return this;
     }
 
-    private void putByKeyspace(Row row, ImmutableMultimap.Builder<String, Row> builder) {
+    private void putByKeyspace(Row row, ImmutableMultimap.Builder<CqlIdentifier, Row> builder) {
       String keyspace = row.getString("keyspace_name");
       if (keyspace == null) {
         LOG.warn("[{}] Skipping system row with missing keyspace name", logPrefix);
       } else {
-        builder.put(keyspace, row);
+        builder.put(CqlIdentifier.fromInternal(keyspace), row);
       }
     }
 
     private void putByKeyspaceAndTable(
-        Row row, Map<String, ImmutableMultimap.Builder<String, Row>> builders) {
+        Row row, Map<CqlIdentifier, ImmutableMultimap.Builder<CqlIdentifier, Row>> builders) {
       String keyspace = row.getString("keyspace_name");
       String table = row.getString(tableNameColumn);
       if (keyspace == null) {
@@ -173,9 +174,10 @@ public class SchemaRows {
       } else if (table == null) {
         LOG.warn("[{}] Skipping system row with missing table name", logPrefix);
       } else {
-        ImmutableMultimap.Builder<String, Row> builder =
-            builders.computeIfAbsent(keyspace, s -> ImmutableListMultimap.builder());
-        builder.put(table, row);
+        ImmutableMultimap.Builder<CqlIdentifier, Row> builder =
+            builders.computeIfAbsent(
+                CqlIdentifier.fromInternal(keyspace), s -> ImmutableListMultimap.builder());
+        builder.put(CqlIdentifier.fromInternal(table), row);
       }
     }
 

@@ -48,7 +48,6 @@ import org.slf4j.LoggerFactory;
 public abstract class SchemaQueries {
 
   private static final Logger LOG = LoggerFactory.getLogger(SchemaQueries.class);
-  private static final CassandraVersion CASSANDRA_300 = CassandraVersion.parse("3.0.0");
   private static final TypeCodec<List<String>> LIST_OF_TEXT = TypeCodecs.listOf(TypeCodecs.TEXT);
 
   public static SchemaQueries newInstance(InternalDriverContext context, String logPrefix) {
@@ -70,13 +69,13 @@ public abstract class SchemaQueries {
           "[{}] Cassandra version missing for {}, defaulting to {}",
           logPrefix,
           node,
-          CASSANDRA_300);
-      cassandraVersion = CASSANDRA_300;
+          CassandraVersion.V3_0_0);
+      cassandraVersion = CassandraVersion.V3_0_0;
     }
     DriverConfigProfile config = context.config().getDefaultProfile();
     LOG.debug(
         "[{}] Sending schema queries to {} with version {}", logPrefix, node, cassandraVersion);
-    return (cassandraVersion.compareTo(CASSANDRA_300) < 0)
+    return (cassandraVersion.compareTo(CassandraVersion.V3_0_0) < 0)
         ? new Cassandra2SchemaQueries(channel, node, config, logPrefix)
         : new Cassandra3SchemaQueries(channel, node, config, logPrefix);
   }

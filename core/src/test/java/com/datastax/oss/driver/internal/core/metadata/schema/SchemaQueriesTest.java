@@ -15,6 +15,7 @@
  */
 package com.datastax.oss.driver.internal.core.metadata.schema;
 
+import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.config.CoreDriverOption;
 import com.datastax.oss.driver.api.core.config.DriverConfigProfile;
 import com.datastax.oss.driver.api.core.metadata.Node;
@@ -34,6 +35,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public abstract class SchemaQueriesTest {
+
+  protected static final CqlIdentifier KS_ID = CqlIdentifier.fromInternal("ks");
+  protected static final CqlIdentifier KS1_ID = CqlIdentifier.fromInternal("ks1");
+  protected static final CqlIdentifier KS2_ID = CqlIdentifier.fromInternal("ks2");
+  protected static final CqlIdentifier FOO_ID = CqlIdentifier.fromInternal("foo");
+
   @Mock protected Node node;
   @Mock protected DriverConfigProfile config;
   @Mock protected DriverChannel driverChannel;

@@ -19,6 +19,7 @@ import com.datastax.oss.driver.api.core.ProtocolVersion;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodecs;
 import com.datastax.oss.driver.internal.core.util.concurrent.CompletableFutures;
+import com.datastax.oss.protocol.internal.ProtocolConstants;
 import com.datastax.oss.protocol.internal.response.result.ColumnSpec;
 import com.datastax.oss.protocol.internal.response.result.Rows;
 import com.google.common.annotations.VisibleForTesting;
@@ -115,6 +116,10 @@ public class AdminResult implements Iterable<AdminResult.Row> {
 
     public Double getDouble(String columnName) {
       return get(columnName, TypeCodecs.DOUBLE);
+    }
+
+    public boolean isString(String columnName) {
+      return columnSpecs.get(columnName).type.id == ProtocolConstants.DataType.VARCHAR;
     }
 
     public String getString(String columnName) {

@@ -15,22 +15,23 @@
  */
 package com.datastax.oss.driver.api.core.metadata.schema;
 
+import com.datastax.oss.driver.api.core.CqlIdentifier;
 import com.datastax.oss.driver.api.core.type.DataType;
 import com.datastax.oss.driver.api.core.type.codec.TypeCodec;
 
 /** A CQL aggregate in the schema metadata. */
 public interface AggregateMetadata extends Describable {
-  KeyspaceMetadata getKeyspace();
+  CqlIdentifier getKeyspace();
 
   FunctionSignature getSignature();
 
   /**
-   * The final function of this aggregate, or {@code null} if there is none.
+   * The signature of the final function of this aggregate, or {@code null} if there is none.
    *
    * <p>This is the function specified with {@code FINALFUNC} in the {@code CREATE AGGREGATE...}
    * statement. It transforms the final value after the aggregation is complete.
    */
-  FunctionMetadata getFinalFunc();
+  FunctionSignature getFinalFuncSignature();
 
   /**
    * The initial state value of this aggregate, or {@code null} if there is none.
@@ -60,12 +61,12 @@ public interface AggregateMetadata extends Describable {
   DataType getReturnType();
 
   /**
-   * The state function of this aggregate.
+   * The signature of the state function of this aggregate.
    *
    * <p>This is the function specified with {@code SFUNC} in the {@code CREATE AGGREGATE...}
    * statement. It aggregates the current state with each row to produce a new state.
    */
-  FunctionMetadata getStateFunc();
+  FunctionSignature getStateFuncSignature();
 
   /**
    * The state type of this aggregate.
@@ -75,4 +76,10 @@ public interface AggregateMetadata extends Describable {
    * rows.
    */
   DataType getStateType();
+
+  @Override
+  default String describeWithChildren(boolean pretty) {
+    // An aggregate has no children
+    return describe(pretty);
+  }
 }

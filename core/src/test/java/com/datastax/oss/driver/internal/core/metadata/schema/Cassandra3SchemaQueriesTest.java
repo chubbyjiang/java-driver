@@ -56,9 +56,9 @@ public class Cassandra3SchemaQueriesTest extends SchemaQueriesTest {
     assertThat(result)
         .isSuccess(
             rows -> {
-              assertThat(rows.types.keySet()).containsOnly("ks");
-              assertThat(rows.types.get("ks")).hasSize(1);
-              assertThat(rows.types.get("ks").iterator().next().getString("type_name"))
+              assertThat(rows.types.keySet()).containsOnly(KS_ID);
+              assertThat(rows.types.get(KS_ID)).hasSize(1);
+              assertThat(rows.types.get(KS_ID).iterator().next().getString("type_name"))
                   .isEqualTo("type");
             });
   }
@@ -81,9 +81,9 @@ public class Cassandra3SchemaQueriesTest extends SchemaQueriesTest {
     assertThat(result)
         .isSuccess(
             rows -> {
-              assertThat(rows.functions.keySet()).containsOnly("ks");
-              assertThat(rows.functions.get("ks")).hasSize(1);
-              assertThat(rows.functions.get("ks").iterator().next().getString("function_name"))
+              assertThat(rows.functions.keySet()).containsOnly(KS_ID);
+              assertThat(rows.functions.get(KS_ID)).hasSize(1);
+              assertThat(rows.functions.get(KS_ID).iterator().next().getString("function_name"))
                   .isEqualTo("add");
             });
   }
@@ -106,9 +106,9 @@ public class Cassandra3SchemaQueriesTest extends SchemaQueriesTest {
     assertThat(result)
         .isSuccess(
             rows -> {
-              assertThat(rows.aggregates.keySet()).containsOnly("ks");
-              assertThat(rows.aggregates.get("ks")).hasSize(1);
-              assertThat(rows.aggregates.get("ks").iterator().next().getString("aggregate_name"))
+              assertThat(rows.aggregates.keySet()).containsOnly(KS_ID);
+              assertThat(rows.aggregates.get(KS_ID)).hasSize(1);
+              assertThat(rows.aggregates.get(KS_ID).iterator().next().getString("aggregate_name"))
                   .isEqualTo("add");
             });
   }
@@ -157,26 +157,31 @@ public class Cassandra3SchemaQueriesTest extends SchemaQueriesTest {
     assertThat(result)
         .isSuccess(
             rows -> {
-              assertThat(rows.tables.keySet()).containsOnly("ks");
-              assertThat(rows.tables.get("ks")).hasSize(1);
-              assertThat(rows.tables.get("ks").iterator().next().getString("table_name"))
+              assertThat(rows.tables.keySet()).containsOnly(KS_ID);
+              assertThat(rows.tables.get(KS_ID)).hasSize(1);
+              assertThat(rows.tables.get(KS_ID).iterator().next().getString("table_name"))
                   .isEqualTo("foo");
 
-              assertThat(rows.columns.keySet()).containsOnly("ks");
-              assertThat(rows.columns.get("ks").keySet()).containsOnly("foo");
+              assertThat(rows.columns.keySet()).containsOnly(KS_ID);
+              assertThat(rows.columns.get(KS_ID).keySet()).containsOnly(FOO_ID);
               assertThat(
-                      rows.columns.get("ks").get("foo").iterator().next().getString("column_name"))
+                      rows.columns
+                          .get(KS_ID)
+                          .get(FOO_ID)
+                          .iterator()
+                          .next()
+                          .getString("column_name"))
                   .isEqualTo("k");
 
-              assertThat(rows.indexes.keySet()).containsOnly("ks");
-              assertThat(rows.indexes.get("ks").keySet()).containsOnly("foo");
+              assertThat(rows.indexes.keySet()).containsOnly(KS_ID);
+              assertThat(rows.indexes.get(KS_ID).keySet()).containsOnly(FOO_ID);
               assertThat(
-                      rows.indexes.get("ks").get("foo").iterator().next().getString("index_name"))
+                      rows.indexes.get(KS_ID).get(FOO_ID).iterator().next().getString("index_name"))
                   .isEqualTo("index");
 
-              assertThat(rows.views.keySet()).containsOnly("ks");
-              assertThat(rows.views.get("ks")).hasSize(1);
-              assertThat(rows.views.get("ks").iterator().next().getString("view_name"))
+              assertThat(rows.views.keySet()).containsOnly(KS_ID);
+              assertThat(rows.views.get(KS_ID)).hasSize(1);
+              assertThat(rows.views.get(KS_ID).iterator().next().getString("view_name"))
                   .isEqualTo("foo");
             });
   }
@@ -246,47 +251,52 @@ public class Cassandra3SchemaQueriesTest extends SchemaQueriesTest {
               assertThat(rows.keyspaces.get(0).getString("keyspace_name")).isEqualTo("ks");
 
               // Types
-              assertThat(rows.types.keySet()).containsOnly("ks");
-              assertThat(rows.types.get("ks")).hasSize(1);
-              assertThat(rows.types.get("ks").iterator().next().getString("type_name"))
+              assertThat(rows.types.keySet()).containsOnly(KS_ID);
+              assertThat(rows.types.get(KS_ID)).hasSize(1);
+              assertThat(rows.types.get(KS_ID).iterator().next().getString("type_name"))
                   .isEqualTo("type");
 
               // Tables
-              assertThat(rows.tables.keySet()).containsOnly("ks");
-              assertThat(rows.tables.get("ks")).hasSize(1);
-              assertThat(rows.tables.get("ks").iterator().next().getString("table_name"))
+              assertThat(rows.tables.keySet()).containsOnly(KS_ID);
+              assertThat(rows.tables.get(KS_ID)).hasSize(1);
+              assertThat(rows.tables.get(KS_ID).iterator().next().getString("table_name"))
                   .isEqualTo("foo");
 
               // Rows
-              assertThat(rows.columns.keySet()).containsOnly("ks");
-              assertThat(rows.columns.get("ks").keySet()).containsOnly("foo");
+              assertThat(rows.columns.keySet()).containsOnly(KS_ID);
+              assertThat(rows.columns.get(KS_ID).keySet()).containsOnly(FOO_ID);
               assertThat(
-                      rows.columns.get("ks").get("foo").iterator().next().getString("column_name"))
+                      rows.columns
+                          .get(KS_ID)
+                          .get(FOO_ID)
+                          .iterator()
+                          .next()
+                          .getString("column_name"))
                   .isEqualTo("k");
 
               // Indexes
-              assertThat(rows.indexes.keySet()).containsOnly("ks");
-              assertThat(rows.indexes.get("ks").keySet()).containsOnly("foo");
+              assertThat(rows.indexes.keySet()).containsOnly(KS_ID);
+              assertThat(rows.indexes.get(KS_ID).keySet()).containsOnly(FOO_ID);
               assertThat(
-                      rows.indexes.get("ks").get("foo").iterator().next().getString("index_name"))
+                      rows.indexes.get(KS_ID).get(FOO_ID).iterator().next().getString("index_name"))
                   .isEqualTo("index");
 
               // Views
-              assertThat(rows.views.keySet()).containsOnly("ks");
-              assertThat(rows.views.get("ks")).hasSize(1);
-              assertThat(rows.views.get("ks").iterator().next().getString("view_name"))
+              assertThat(rows.views.keySet()).containsOnly(KS_ID);
+              assertThat(rows.views.get(KS_ID)).hasSize(1);
+              assertThat(rows.views.get(KS_ID).iterator().next().getString("view_name"))
                   .isEqualTo("foo");
 
               // Functions
-              assertThat(rows.functions.keySet()).containsOnly("ks");
-              assertThat(rows.functions.get("ks")).hasSize(1);
-              assertThat(rows.functions.get("ks").iterator().next().getString("function_name"))
+              assertThat(rows.functions.keySet()).containsOnly(KS_ID);
+              assertThat(rows.functions.get(KS_ID)).hasSize(1);
+              assertThat(rows.functions.get(KS_ID).iterator().next().getString("function_name"))
                   .isEqualTo("add");
 
               // Aggregates
-              assertThat(rows.aggregates.keySet()).containsOnly("ks");
-              assertThat(rows.aggregates.get("ks")).hasSize(1);
-              assertThat(rows.aggregates.get("ks").iterator().next().getString("aggregate_name"))
+              assertThat(rows.aggregates.keySet()).containsOnly(KS_ID);
+              assertThat(rows.aggregates.get(KS_ID)).hasSize(1);
+              assertThat(rows.aggregates.get(KS_ID).iterator().next().getString("aggregate_name"))
                   .isEqualTo("add");
             });
   }
@@ -350,47 +360,57 @@ public class Cassandra3SchemaQueriesTest extends SchemaQueriesTest {
               assertThat(rows.keyspaces.get(1).getString("keyspace_name")).isEqualTo("ks2");
 
               // Types
-              assertThat(rows.types.keySet()).containsOnly("ks1");
-              assertThat(rows.types.get("ks1")).hasSize(1);
-              assertThat(rows.types.get("ks1").iterator().next().getString("type_name"))
+              assertThat(rows.types.keySet()).containsOnly(KS1_ID);
+              assertThat(rows.types.get(KS1_ID)).hasSize(1);
+              assertThat(rows.types.get(KS1_ID).iterator().next().getString("type_name"))
                   .isEqualTo("type");
 
               // Tables
-              assertThat(rows.tables.keySet()).containsOnly("ks1");
-              assertThat(rows.tables.get("ks1")).hasSize(1);
-              assertThat(rows.tables.get("ks1").iterator().next().getString("table_name"))
+              assertThat(rows.tables.keySet()).containsOnly(KS1_ID);
+              assertThat(rows.tables.get(KS1_ID)).hasSize(1);
+              assertThat(rows.tables.get(KS1_ID).iterator().next().getString("table_name"))
                   .isEqualTo("foo");
 
               // Rows
-              assertThat(rows.columns.keySet()).containsOnly("ks1");
-              assertThat(rows.columns.get("ks1").keySet()).containsOnly("foo");
+              assertThat(rows.columns.keySet()).containsOnly(KS1_ID);
+              assertThat(rows.columns.get(KS1_ID).keySet()).containsOnly(FOO_ID);
               assertThat(
-                      rows.columns.get("ks1").get("foo").iterator().next().getString("column_name"))
+                      rows.columns
+                          .get(KS1_ID)
+                          .get(FOO_ID)
+                          .iterator()
+                          .next()
+                          .getString("column_name"))
                   .isEqualTo("k");
 
               // Indexes
-              assertThat(rows.indexes.keySet()).containsOnly("ks1");
-              assertThat(rows.indexes.get("ks1").keySet()).containsOnly("foo");
+              assertThat(rows.indexes.keySet()).containsOnly(KS1_ID);
+              assertThat(rows.indexes.get(KS1_ID).keySet()).containsOnly(FOO_ID);
               assertThat(
-                      rows.indexes.get("ks1").get("foo").iterator().next().getString("index_name"))
+                      rows.indexes
+                          .get(KS1_ID)
+                          .get(FOO_ID)
+                          .iterator()
+                          .next()
+                          .getString("index_name"))
                   .isEqualTo("index");
 
               // Views
-              assertThat(rows.views.keySet()).containsOnly("ks2");
-              assertThat(rows.views.get("ks2")).hasSize(1);
-              assertThat(rows.views.get("ks2").iterator().next().getString("view_name"))
+              assertThat(rows.views.keySet()).containsOnly(KS2_ID);
+              assertThat(rows.views.get(KS2_ID)).hasSize(1);
+              assertThat(rows.views.get(KS2_ID).iterator().next().getString("view_name"))
                   .isEqualTo("foo");
 
               // Functions
-              assertThat(rows.functions.keySet()).containsOnly("ks2");
-              assertThat(rows.functions.get("ks2")).hasSize(1);
-              assertThat(rows.functions.get("ks2").iterator().next().getString("function_name"))
+              assertThat(rows.functions.keySet()).containsOnly(KS2_ID);
+              assertThat(rows.functions.get(KS2_ID)).hasSize(1);
+              assertThat(rows.functions.get(KS2_ID).iterator().next().getString("function_name"))
                   .isEqualTo("add");
 
               // Aggregates
-              assertThat(rows.aggregates.keySet()).containsOnly("ks2");
-              assertThat(rows.aggregates.get("ks2")).hasSize(1);
-              assertThat(rows.aggregates.get("ks2").iterator().next().getString("aggregate_name"))
+              assertThat(rows.aggregates.keySet()).containsOnly(KS2_ID);
+              assertThat(rows.aggregates.get(KS2_ID)).hasSize(1);
+              assertThat(rows.aggregates.get(KS2_ID).iterator().next().getString("aggregate_name"))
                   .isEqualTo("add");
             });
   }
@@ -418,9 +438,9 @@ public class Cassandra3SchemaQueriesTest extends SchemaQueriesTest {
     assertThat(result)
         .isSuccess(
             rows -> {
-              assertThat(rows.types.keySet()).containsOnly("ks");
-              assertThat(rows.types.get("ks")).hasSize(2);
-              Iterator<AdminResult.Row> iterator = rows.types.get("ks").iterator();
+              assertThat(rows.types.keySet()).containsOnly(KS_ID);
+              assertThat(rows.types.get(KS_ID)).hasSize(2);
+              Iterator<AdminResult.Row> iterator = rows.types.get(KS_ID).iterator();
               assertThat(iterator.next().getString("type_name")).isEqualTo("type1");
               assertThat(iterator.next().getString("type_name")).isEqualTo("type2");
             });
@@ -478,15 +498,20 @@ public class Cassandra3SchemaQueriesTest extends SchemaQueriesTest {
     assertThat(result)
         .isSuccess(
             rows -> {
-              assertThat(rows.tables.keySet()).containsOnly("ks");
-              assertThat(rows.tables.get("ks")).hasSize(1);
-              assertThat(rows.tables.get("ks").iterator().next().getString("table_name"))
+              assertThat(rows.tables.keySet()).containsOnly(KS_ID);
+              assertThat(rows.tables.get(KS_ID)).hasSize(1);
+              assertThat(rows.tables.get(KS_ID).iterator().next().getString("table_name"))
                   .isEqualTo("foo");
 
-              assertThat(rows.columns.keySet()).containsOnly("ks");
-              assertThat(rows.columns.get("ks").keySet()).containsOnly("foo");
+              assertThat(rows.columns.keySet()).containsOnly(KS_ID);
+              assertThat(rows.columns.get(KS_ID).keySet()).containsOnly(FOO_ID);
               assertThat(
-                      rows.columns.get("ks").get("foo").iterator().next().getString("column_name"))
+                      rows.columns
+                          .get(KS_ID)
+                          .get(FOO_ID)
+                          .iterator()
+                          .next()
+                          .getString("column_name"))
                   .isEqualTo("k");
             });
   }
